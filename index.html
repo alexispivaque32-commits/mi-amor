@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Galaxia de Amor 💖</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: black;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+canvas {
+  display: block;
+}
+
+.texto-central {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff4fd8;
+  font-size: 36px;
+  font-weight: bold;
+  text-shadow: 0 0 25px #ff4fd8;
+  pointer-events: none;
+  text-align: center;
+}
+
+.frase {
+  position: absolute;
+  color: #ffb3ec;
+  font-size: 15px;
+  opacity: 0.95;
+  text-shadow: 0 0 10px #ff4fd8;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* 🎵 Botón música */
+.boton-musica {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 18px;
+  background: #ff4fd8;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 0 15px #ff4fd8;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="galaxia"></canvas>
+
+<div class="texto-central">
+  💖 Karla Temo tinkiwinki 18💖<br>
+  Te amo infinitamente
+</div>
+
+<!-- 🎶 Música -->
+<audio id="musica" loop>
+  <source src="cancion-karla.mp3" type="audio/mpeg">
+</audio>
+
+<button class="boton-musica" onclick="document.getElementById('musica').play()">
+🎵 Música
+</button>
+
+<script>
+const canvas = document.getElementById("galaxia");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+
+const cx = canvas.width / 2;
+const cy = canvas.height / 2;
+
+/* 💬 50 FRASES */
+const frases = [
+  "Karla, te amo 💖","Eres mi reina 👑","Mi angelita hermosa 😇",
+  "Eres el amor de mi vida 💕","Contigo todo es perfecto ✨",
+  "Mi corazón es tuyo 💘","Gracias por existir 🌹",
+  "Siempre tú y yo 💞","Mi princesa bella 👸",
+  "Eres mi universo 🌌","Te amo infinitamente ♾️",
+  "Mi sueño hecho realidad 💫","Mi lugar seguro 🤍",
+  "Eres mi felicidad 😊","Mi amor eterno 💖",
+  "Eres mi sonrisa diaria 😍","Mi vida eres tú 💕",
+  "Eres mi luz ✨","Te amo más cada día 💗",
+  "Mi corazón late por ti ❤️","Eres mi paz 🕊️",
+  "Mi bendición 🙏","Mi reina hermosa 👑💖",
+  "Siempre contigo 🤝","Eres mi todo 💞",
+  "Mi angelito bello 😇","Amarte es mi destino 💘",
+  "Eres mi inspiración 🌟","Mi amor verdadero 💖",
+  "Tú completas mi vida 🧩","Eres mi hogar 🏡",
+  "Mi cielo bonito ☁️","Lo mejor que me pasó 💕",
+  "Mi corazón te pertenece 💓","Te amo sin límites ♾️",
+  "Mi alegría eterna 😄","Mi milagro ✨",
+  "Mi princesa eterna 👸","Mi amor puro 💗",
+  "Eres mi estrella 🌟","Mi razón de amar 💘",
+  "Eres mi calma 🌊","Mi angelita preciosa 😇💖",
+  "Siempre a tu lado 💞","Eres mi destino 💫",
+  "Mi amor infinito ❤️","Mi sueño bonito 🌙",
+  "Karla, eres todo para mí 💖"
+];
+
+/* ⭐ Estrellas */
+const estrellas = [];
+for (let i = 0; i < 2000; i++) {
+  estrellas.push({
+    angulo: Math.random() * Math.PI * 2,
+    radio: Math.random() * Math.min(cx, cy),
+    velocidad: Math.random() * 0.0012 + 0.0003,
+    tamaño: Math.random() * 1.6,
+    brillo: Math.random() * 255
+  });
+}
+
+/* 💬 Crear frases flotantes */
+frases.forEach(texto => {
+  const div = document.createElement("div");
+  div.className = "frase";
+  div.innerText = texto;
+  document.body.appendChild(div);
+
+  div.data = {
+    angulo: Math.random() * Math.PI * 2,
+    radio: 220 + Math.random() * 280,
+    velocidad: 0.0006 + Math.random() * 0.0008
+  };
+});
+
+function dibujar() {
+  ctx.fillStyle = "rgba(0,0,0,0.25)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  /* Estrellas */
+  estrellas.forEach(e => {
+    e.angulo += e.velocidad;
+    const x = cx + Math.cos(e.angulo) * e.radio;
+    const y = cy + Math.sin(e.angulo) * e.radio;
+
+    ctx.fillStyle = `rgb(255, ${120 + e.brillo/4}, 220)`;
+    ctx.beginPath();
+    ctx.arc(x, y, e.tamaño, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  /* Núcleo */
+  const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 180);
+  grad.addColorStop(0, "#ffd1f3");
+  grad.addColorStop(0.4, "#ff4fd8");
+  grad.addColorStop(1, "transparent");
+
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 180, 0, Math.PI * 2);
+  ctx.fill();
+
+  /* Frases */
+  document.querySelectorAll(".frase").forEach(div => {
+    div.data.angulo += div.data.velocidad;
+    const x = cx + Math.cos(div.data.angulo) * div.data.radio;
+    const y = cy + Math.sin(div.data.angulo) * div.data.radio;
+    div.style.left = x + "px";
+    div.style.top = y + "px";
+  });
+
+  requestAnimationFrame(dibujar);
+}
+
+dibujar();
+
+window.addEventListener("resize", resize);
+</script>
+
+</body>
+</html>
